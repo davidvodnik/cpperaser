@@ -10,3 +10,11 @@ TEST_CASE("Parse method") {
     REQUIRE(m.value().type_ == "void");
     REQUIRE(m.value().name_ == "fun");
 }
+
+TEST_CASE("Parse interface") {
+    Tokenizer t("struct interface{void fun();};");
+    auto i = parse_interface(t);
+    REQUIRE(i.has_value());
+    REQUIRE(i.value().name_ == "interface");
+    REQUIRE(i.value().methods_.size() == 1);
+}
