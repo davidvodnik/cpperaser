@@ -1,5 +1,6 @@
 add_executable(test_tokenizer
     tokenizer.h
+    tokenizer.cc
     tokenizer.t.cc
     )
 target_link_libraries(test_tokenizer PRIVATE catch)

@@ -1,19 +1,11 @@
 #include <string>
 
-namespace {
-
-bool isspecial(char c) {
-    return c == '{' || c == '}' || c == '(' || c == ')' || c == '<' ||
-           c == '>' || c == '[' || c == ']' || c == ',' || c == ':';
-}
-
-} // namespace
-
 namespace Duck {
 
 class Token {
 public:
-    Token(std::string_view token, size_t line, size_t position) : token_(token), line_(line), position_(position) {}
+    Token(std::string_view token, size_t line, size_t position)
+        : token_(token), line_(line), position_(position) {}
 
     bool operator==(const std::string_view &token) const {
         return token_ == token;
@@ -42,31 +34,7 @@ public:
     Token &token() { return token_; }
 
 private:
-    void advance() {
-        while (pos_ < s_.size() && std::isspace(s_[pos_])) {
-            if (s_[pos_] == '\n') {
-                line_++;
-                line_pos_ = pos_ + 1;
-            }
-            pos_++;
-        }
-        if (pos_ == s_.size()) {
-            pos_++;
-            return;
-        }
-
-        size_t first = pos_;
-
-        if (isspecial(s_[pos_])) {
-            token_ = {std::string_view{s_.c_str() + first, ++pos_ - first}, line_, first - line_pos_};
-            return;
-        }
-
-        while (pos_ < s_.size() && !std::isspace(s_[pos_]) &&
-               !isspecial(s_[pos_])) {
-            token_ = {std::string_view{s_.c_str() + first, ++pos_ - first}, line_, first - line_pos_};
-        }
-    }
+    void advance();
 
     const std::string s_;
 
