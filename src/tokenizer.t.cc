@@ -126,3 +126,47 @@ TEST_CASE("Read struct") {
     REQUIRE(t.token() == ";");
     REQUIRE(t.next() == false);
 }
+
+TEST_CASE("Line numbers and token positions") {
+    Tokenizer t("struct test {\n    void x();\n};");
+    REQUIRE(t.token() == "struct");
+    REQUIRE(t.token().line() == 0);
+    REQUIRE(t.token().position() == 0);
+    REQUIRE(t.next() == true);
+    REQUIRE(t.token() == "test");
+    REQUIRE(t.token().line() == 0);
+    REQUIRE(t.token().position() == 7);
+    REQUIRE(t.next() == true);
+    REQUIRE(t.token() == "{");
+    REQUIRE(t.token().line() == 0);
+    REQUIRE(t.token().position() == 12);
+    REQUIRE(t.next() == true);
+    REQUIRE(t.token() == "void");
+    REQUIRE(t.token().line() == 1);
+    REQUIRE(t.token().position() == 4);
+    REQUIRE(t.next() == true);
+    REQUIRE(t.token() == "x");
+    REQUIRE(t.token().line() == 1);
+    REQUIRE(t.token().position() == 9);
+    REQUIRE(t.next() == true);
+    REQUIRE(t.token() == "(");
+    REQUIRE(t.token().line() == 1);
+    REQUIRE(t.token().position() == 10);
+    REQUIRE(t.next() == true);
+    REQUIRE(t.token() == ")");
+    REQUIRE(t.token().line() == 1);
+    REQUIRE(t.token().position() == 11);
+    REQUIRE(t.next() == true);
+    REQUIRE(t.token() == ";");
+    REQUIRE(t.token().line() == 1);
+    REQUIRE(t.token().position() == 12);
+    REQUIRE(t.next() == true);
+    REQUIRE(t.token() == "}");
+    REQUIRE(t.token().line() == 2);
+    REQUIRE(t.token().position() == 0);
+    REQUIRE(t.next() == true);
+    REQUIRE(t.token() == ";");
+    REQUIRE(t.token().line() == 2);
+    REQUIRE(t.token().position() == 1);
+    REQUIRE(t.next() == false);
+}
