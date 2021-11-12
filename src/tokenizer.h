@@ -1,3 +1,4 @@
+#pragma once
 #include <string>
 
 namespace Duck {
@@ -9,6 +10,9 @@ public:
 
     bool operator==(const std::string_view &token) const {
         return token_ == token;
+    }
+    bool operator!=(const std::string_view &token) const {
+        return !(*this == token);
     }
     [[nodiscard]] size_t line() const { return line_; }
     [[nodiscard]] size_t position() const { return position_; }
