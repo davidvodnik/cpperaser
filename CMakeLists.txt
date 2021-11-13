@@ -8,4 +8,5 @@ include(CTest)
 enable_testing()
 
 add_subdirectory(thirdparty/catch)
+add_subdirectory(thirdparty/fmt)
 add_subdirectory(src)
