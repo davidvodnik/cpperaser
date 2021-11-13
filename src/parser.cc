@@ -2,71 +2,74 @@
 
 namespace Duck {
 
-std::optional<Method> parse_method(Tokenizer &t) {
+Result<Method> parse_method(Tokenizer &t) {
     if (!t.valid()) {
-        return {};
+        return Error{EndOfStream{t.token()}};
     }
     auto type = t.token();
     if (!t.next()) {
-        return {};
+        return Error{EndOfStream{t.token()}};
     }
     auto name = t.token();
     if (!t.next()) {
-        return {};
+        return Error{EndOfStream{t.token()}};
     }
     if (t.token() != "(") {
-        return {};
+        return Error{UnexpectedToken{"(", t.token()}};
     }
     if (!t.next()) {
-        return {};
+        return Error{EndOfStream{t.token()}};
     }
     if (t.token() != ")") {
-        return {};
+        return Error{UnexpectedToken{")", t.token()}};
     }
     if (!t.next()) {
-        return {};
+        return Error{EndOfStream{t.token()}};
     }
     if (t.token() != ";") {
-        return {};
+        return Error{UnexpectedToken{";", t.token()}};
     }
     t.next();
     return Method{type.token_, name.token_};
 }
 
-std::optional<Interface> parse_interface(Tokenizer &t) {
+Result<Interface> parse_interface(Tokenizer &t) {
     if (!t.valid()) {
-        return {};
+        return Error{EndOfStream{t.token()}};
     }
     if (t.token() != "struct") {
-        return {};
+        return Error{UnexpectedToken{"struct", t.token()}};
     }
     if (!t.next()) {
-        return {};
+        return Error{EndOfStream{t.token()}};
     }
     auto name = t.token();
     if (!t.next()) {
-        return {};
+        return Error{EndOfStream{t.token()}};
     }
     if (t.token() != "{") {
-        return {};
+        return Error{UnexpectedToken{"{", t.token()}};
     }
     t.next();
-    std::vector<Method> methods;
+    std ::vector<Method> methods;
     while (t.token() != "}" && t.valid()) {
         auto m = parse_method(t);
+        if (!m.valid()) {
+            return m.error();
+        }
         methods.push_back(m.value());
     }
     if (!t.valid()) {
-        return {};
+        return Error{EndOfStream{t.token()}};
     }
     if (t.token() != "}") {
-        return {};
+        return Error{UnexpectedToken{"}", t.token()}};
     }
     if (!t.next()) {
-        return {};
+        return Error{EndOfStream{t.token()}};
     }
     if (t.token() != ";") {
-        return {};
+        return Error{UnexpectedToken{";", t.token()}};
     }
     t.next();
     return Interface{name.token_, methods};

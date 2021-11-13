@@ -20,6 +20,7 @@ void Tokenizer::advance() {
         pos_++;
     }
     if (pos_ == s_.size()) {
+        token_ = Token{"", line_, pos_ - line_pos_};
         pos_++;
         return;
     }

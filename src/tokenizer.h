@@ -8,6 +8,10 @@ public:
     Token(std::string_view token, size_t line, size_t position)
         : token_(token), line_(line), position_(position) {}
 
+    bool operator==(const Token &token) const {
+        return token_ == token.token_ && line_ == token.line_ &&
+               position_ == token.position_;
+    }
     bool operator==(const std::string_view &token) const {
         return token_ == token;
     }

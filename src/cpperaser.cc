@@ -32,6 +32,20 @@ void print_interface(const Duck::Interface &interface) {
                "}};");
 }
 
+void print_error(const Duck::Error &error) {
+    if (error.is<Duck::UnexpectedToken>()) {
+        auto e = error.as<Duck::UnexpectedToken>();
+        fmt::print("Unexpected token, expected '{}', got '{}', line {} at {}\n",
+                   e.expected_, e.token_.token_, e.token_.line(),
+                   e.token_.position());
+    }
+    if (error.is<Duck::EndOfStream>()) {
+        auto e = error.as<Duck::EndOfStream>();
+        fmt::print("Unexpected end of stream, line {} at {}\n", e.token_.line(),
+                   e.token_.position());
+    }
+}
+
 int main(int argc, char **argv) {
     if (argc != 2)
         return -1;
@@ -39,8 +53,10 @@ int main(int argc, char **argv) {
     Duck::Tokenizer t(argv[1]);
     auto interface = Duck::parse_interface(t);
 
-    if (!interface.has_value())
+    if (!interface.valid()) {
+        print_error(interface.error());
         return -1;
+    }
 
     print_interface(interface.value());
 }
