@@ -29,20 +29,26 @@ void print_interface(const Duck::Interface &interface) {
     }
 
     fmt::print("    uintptr_t val_;\n"
-               "}};");
+               "}};\n");
+}
+
+void print_line(std::string_view line, size_t line_number, size_t position) {
+    fmt::print("{: >{}} | {}\n", line_number, 5, line);
+    fmt::print("      | {: >{}}\n", "^", position);
 }
 
 void print_error(const Duck::Error &error) {
     if (error.is<Duck::UnexpectedToken>()) {
         auto e = error.as<Duck::UnexpectedToken>();
-        fmt::print("Unexpected token, expected '{}', got '{}', line {} at {}\n",
-                   e.expected_, e.token_.token_, e.token_.line(),
-                   e.token_.position());
+        fmt::print(":{}:{}: error: expected '{}'\n", e.token_.line() + 1,
+                   e.token_.position() + 1, e.expected_, e.token_.token_);
+        print_line(e.line_, e.token_.line() + 1, e.token_.position() + 1);
     }
     if (error.is<Duck::EndOfStream>()) {
         auto e = error.as<Duck::EndOfStream>();
-        fmt::print("Unexpected end of stream, line {} at {}\n", e.token_.line(),
-                   e.token_.position());
+        fmt::print(":{}:{}: error: end of stream\n", e.token_.line() + 1,
+                   e.token_.position() + 1);
+        print_line(e.line_, e.token_.line() + 1, e.token_.position() + 1);
     }
 }
 

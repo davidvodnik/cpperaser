@@ -41,6 +41,13 @@ public:
 
     Token &token() { return token_; }
 
+    std::string_view line() {
+        size_t pos = pos_;
+        while (pos < s_.size() && s_[pos] != '\n')
+            pos++;
+        return std::string_view(s_).substr(line_pos_, pos - line_pos_);
+    }
+
 private:
     void advance();
 

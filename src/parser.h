@@ -8,18 +8,21 @@ namespace Duck {
 
 class UnexpectedToken {
 public:
-    UnexpectedToken(std::string expected, Token token)
-        : expected_(std::move(expected)), token_(token) {}
+    UnexpectedToken(std::string expected, Token token, std::string_view line)
+        : expected_(std::move(expected)), token_(token), line_(line) {}
 
     std::string expected_;
     Token token_;
+    std::string_view line_;
 };
 
 class EndOfStream {
 public:
-    EndOfStream(Token token) : token_(token) {}
+    EndOfStream(Token token, std::string_view line)
+        : token_(token), line_(line) {}
 
     Token token_;
+    std::string_view line_;
 };
 
 class Error {
