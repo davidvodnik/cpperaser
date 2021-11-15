@@ -48,20 +48,25 @@ private:
     std::variant<T, Error> value_;
 };
 
+struct Type {
+    std::string name;
+};
+
 class Method {
 public:
-    Method(std::string_view type, std::string_view name)
-        : type_(type), name_(name) {}
-    std::string type_, name_;
+    Method(Type type, std::string_view name)
+        : type(std::move(type)), name(name) {}
+    Type type;
+    std::string name;
 };
 
 class Interface {
 public:
     Interface(std::string_view name, std::vector<Method> methods)
-        : name_(name), methods_(std::move(methods)) {}
+        : name(name), methods(std::move(methods)) {}
 
-    std::string name_;
-    std::vector<Method> methods_;
+    std::string name;
+    std::vector<Method> methods;
 };
 
 Result<Method> parse_method(Tokenizer &t);

@@ -5,10 +5,10 @@ void print_interface(const Duck::Interface &interface) {
     fmt::print("#include <memory>\n\n"
                "class {} {{\n"
                "    struct concept_ {{\n",
-               interface.name_);
+               interface.name);
 
-    for (const auto &m : interface.methods_) {
-        fmt::print("        virtual {} {}_();\n", m.type_, m.name_);
+    for (const auto &m : interface.methods) {
+        fmt::print("        virtual {} {}_();\n", m.type.name, m.name);
     }
 
     fmt::print("    }};\n"
@@ -16,9 +16,9 @@ void print_interface(const Duck::Interface &interface) {
                "    template<typename T> struct model_ : concept_ {{\n"
                "        model_(T t) : value_(t) {{}}\n");
 
-    for (const auto &m : interface.methods_) {
-        fmt::print("        {} {}_() override {{ value_.draw(); }}\n", m.type_,
-                   m.name_);
+    for (const auto &m : interface.methods) {
+        fmt::print("        {} {}_() override {{ value_.draw(); }}\n",
+                   m.type.name, m.name);
     }
 
     fmt::print("        T value_;\n"
@@ -26,8 +26,8 @@ void print_interface(const Duck::Interface &interface) {
                "\n"
                "public:\n");
 
-    for (const auto &m : interface.methods_) {
-        fmt::print("    {} {}() {{ value_->draw_(); }}\n", m.type_, m.name_);
+    for (const auto &m : interface.methods) {
+        fmt::print("    {} {}() {{ value_->draw_(); }}\n", m.type.name, m.name);
     }
 
     fmt::print("\n"

@@ -7,16 +7,16 @@ TEST_CASE("Parse method") {
     Tokenizer t("void fun();");
     auto m = parse_method(t);
     REQUIRE(m.valid());
-    REQUIRE(m.value().type_ == "void");
-    REQUIRE(m.value().name_ == "fun");
+    REQUIRE(m.value().type.name == "void");
+    REQUIRE(m.value().name == "fun");
 }
 
 TEST_CASE("Parse interface") {
     Tokenizer t("struct interface{void fun();};");
     auto i = parse_interface(t);
     REQUIRE(i.valid());
-    REQUIRE(i.value().name_ == "interface");
-    REQUIRE(i.value().methods_.size() == 1);
+    REQUIRE(i.value().name == "interface");
+    REQUIRE(i.value().methods.size() == 1);
 }
 
 TEST_CASE("Parse unexpected token") {
