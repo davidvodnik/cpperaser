@@ -36,47 +36,45 @@ Result<int> parse_expected(Tokenizer &t, const std::string &e) {
 }
 
 Result<Method> parse_method(Tokenizer &t) {
-    Type type;
-    if (auto n = parse_type(t); !n.valid()) {
-        return n.error();
-    } else {
-        type = n.value();
+    auto type = parse_type(t);
+    if (!type.valid()) {
+        return type.error();
     }
-    std::string_view name;
-    if (auto n = parse_name(t); !n.valid()) {
-        return n.error();
-    } else {
-        name = n.value();
+
+    auto name = parse_name(t);
+    if (!name.valid()) {
+        return name.error();
     }
+
     if (auto e = parse_expected(t, "("); !e.valid()) {
         return e.error();
     }
+
     if (auto e = parse_expected(t, ")"); !e.valid()) {
         return e.error();
     }
+
     if (auto e = parse_expected(t, ";"); !e.valid()) {
         return e.error();
     }
-    return Method{type, name};
+
+    return Method{type.value(), name.value()};
 }
 
 Result<Interface> parse_interface(Tokenizer &t) {
-    if (!t.valid()) {
-        return Error{EndOfStream{t.token(), t.line()}};
+    if (auto e = parse_expected(t, "struct"); !e.valid()) {
+        return e.error();
     }
-    if (t.token() != "struct") {
-        return Error{UnexpectedToken{"struct", t.token(), t.line()}};
+
+    auto name = parse_name(t);
+    if (!name.valid()) {
+        return name.error();
     }
-    t.next();
-    std::string_view name;
-    if (auto n = parse_name(t); !n.valid()) {
-        return n.error();
-    } else {
-        name = n.value();
-    }
+
     if (auto e = parse_expected(t, "{"); !e.valid()) {
         return e.error();
     }
+
     std ::vector<Method> methods;
     while (t.token() != "}" && t.valid()) {
         auto m = parse_method(t);
@@ -85,13 +83,16 @@ Result<Interface> parse_interface(Tokenizer &t) {
         }
         methods.push_back(m.value());
     }
+
     if (auto e = parse_expected(t, "}"); !e.valid()) {
         return e.error();
     }
+
     if (auto e = parse_expected(t, ";"); !e.valid()) {
         return e.error();
     }
-    return Interface{name, methods};
+
+    return Interface{name.value(), methods};
 }
 
 } // namespace Duck
