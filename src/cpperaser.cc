@@ -40,29 +40,29 @@ void print_interface(const Duck::Interface &interface) {
                "}};\n");
 }
 
-void print_line(std::string_view line, size_t line_number, size_t position) {
-    fmt::print("{: >{}} | {}\n", line_number, 5, line);
-    fmt::print("      | {: >{}}\n", "^", position);
+void print_line(Duck::Line line) {
+    fmt::print("{: >{}} | {}\n", line.number, 5, line.contents_);
+    fmt::print("      | {: >{}}\n", "^", line.position + 1);
 }
 
 void print_error(const Duck::Error &error) {
     if (error.is<Duck::UnexpectedToken>()) {
         auto e = error.as<Duck::UnexpectedToken>();
-        fmt::print(":{}:{}: error: expected '{}'\n", e.token_.line() + 1,
-                   e.token_.position() + 1, e.expected_, e.token_.token_);
-        print_line(e.line_, e.token_.line() + 1, e.token_.position() + 1);
+        fmt::print(":{}:{}: error: expected '{}'\n", e.line_.number + 1,
+                   e.line_.position + 1, e.expected_, e.token_.token_);
+        print_line(e.line_);
     }
     if (error.is<Duck::EndOfStream>()) {
         auto e = error.as<Duck::EndOfStream>();
-        fmt::print(":{}:{}: error: end of stream\n", e.token_.line() + 1,
-                   e.token_.position() + 1);
-        print_line(e.line_, e.token_.line() + 1, e.token_.position() + 1);
+        fmt::print(":{}:{}: error: end of stream\n", e.line_.number + 1,
+                   e.line_.position + 1);
+        print_line(e.line_);
     }
     if (error.is<Duck::InvalidName>()) {
         auto e = error.as<Duck::InvalidName>();
-        fmt::print(":{}:{}: error: invalid name '{}'\n", e.token_.line() + 1,
-                   e.token_.position() + 1, e.token_.token_);
-        print_line(e.line_, e.token_.line() + 1, e.token_.position() + 1);
+        fmt::print(":{}:{}: error: invalid name '{}'\n", e.line_.number + 1,
+                   e.line_.position + 1, e.token_.token_);
+        print_line(e.line_);
     }
 }
 

@@ -19,24 +19,23 @@ void Tokenizer::advance() {
         }
         pos_++;
     }
+
+    first_ = pos_;
+
     if (pos_ == s_.size()) {
-        token_ = Token{"", line_, pos_ - line_pos_};
+        token_ = Token{""};
         pos_++;
         return;
     }
 
-    size_t first = pos_;
-
     if (isspecial(s_[pos_])) {
-        token_ = {std::string_view{s_.c_str() + first, ++pos_ - first}, line_,
-                  first - line_pos_};
+        token_ = {std::string_view{s_.c_str() + first_, ++pos_ - first_}};
         return;
     }
 
     while (pos_ < s_.size() && !std::isspace(s_[pos_]) &&
            !isspecial(s_[pos_])) {
-        token_ = {std::string_view{s_.c_str() + first, ++pos_ - first}, line_,
-                  first - line_pos_};
+        token_ = {std::string_view{s_.c_str() + first_, ++pos_ - first_}};
     }
 }
 
