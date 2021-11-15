@@ -2,33 +2,41 @@
 #include <fmt/core.h>
 
 void print_interface(const Duck::Interface &interface) {
-    fmt::print("class {} {{\n"
-               "public:\n",
+    fmt::print("#include <memory>\n\n"
+               "class {} {{\n"
+               "    struct concept_ {{\n",
                interface.name_);
 
     for (const auto &m : interface.methods_) {
-        fmt::print("    {} {}();\n", m.type_, m.name_);
+        fmt::print("        virtual {} {}_();\n", m.type_, m.name_);
     }
 
-    fmt::print("    template<typename T>\n"
-               "    {}(T& t) {{\n"
-               "        val_ = reinterpret_cast<uintptr_t>(&t);\n",
-               interface.name_);
+    fmt::print("    }};\n"
+               "\n"
+               "    template<typename T> struct model_ : concept_ {{\n"
+               "        model_(T t) : value_(t) {{}}\n");
 
     for (const auto &m : interface.methods_) {
-        fmt::print("        {1}_ = [](uintptr_t t) -> {0} {{ "
-                   "reinterpret_cast<T*>(t)->{1}(); }};\n",
-                   m.type_, m.name_);
+        fmt::print("        {} {}_() override {{ value_.draw(); }}\n", m.type_,
+                   m.name_);
     }
 
-    fmt::print("    }}\n"
-               "private:\n");
+    fmt::print("        T value_;\n"
+               "    }};\n"
+               "\n"
+               "public:\n");
 
     for (const auto &m : interface.methods_) {
-        fmt::print("    {} (*{}_)(uintptr_t t);\n", m.type_, m.name_);
+        fmt::print("    {} {}() {{ value_->draw_(); }}\n", m.type_, m.name_);
     }
 
-    fmt::print("    uintptr_t val_;\n"
+    fmt::print("\n"
+               "    template <typename T> Drawable(const T &t) {{\n"
+               "        value_ = std::make_unique<model_<T>>(t);\n"
+               "    }}\n"
+               "\n"
+               "private:\n"
+               "    std::unique_ptr<concept_> value_;\n"
                "}};\n");
 }
 
