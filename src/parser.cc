@@ -30,6 +30,24 @@ Result<std::string_view> parse_name(Tokenizer &t) {
     return name;
 }
 
+Result<int> parse_nested_types(Tokenizer &t) {
+    if (t.token() == "<") {
+        do {
+            t.next();
+
+            auto nested_type = parse_type(t);
+            if (!nested_type.valid()) {
+                return nested_type.error();
+            }
+        } while (t.token() == ",");
+
+        if (auto e = parse_expected(t, ">"); !e.valid()) {
+            return e.error();
+        }
+    }
+    return 0;
+}
+
 Result<Type> parse_type(Tokenizer &t) {
     if (!t.valid()) {
         return Error{EndOfStream{t.token(), t.line()}};
@@ -40,16 +58,8 @@ Result<Type> parse_type(Tokenizer &t) {
         return name.error();
     }
 
-    if (t.token() == "<") {
-        t.next();
-
-        auto nested_type = parse_type(t);
-        if (!nested_type.valid()) {
-            return nested_type.error();
-        }
-        if (auto e = parse_expected(t, ">"); !e.valid()) {
-            return e.error();
-        }
+    if (auto e = parse_nested_types(t); !e.valid()) {
+        return e.error();
     }
 
     return Type{std::string{name.value()}};

@@ -69,8 +69,12 @@ public:
     std::vector<Method> methods;
 };
 
+Result<int> parse_expected(Tokenizer &t, const std::string &e);
+Result<std::string_view> parse_name(Tokenizer &t);
+Result<int> parse_nested_types(Tokenizer &t);
+Result<Type> parse_type(Tokenizer &t);
 Result<Method> parse_method(Tokenizer &t);
-
+Result<std::vector<Method>> parse_methods(Tokenizer &t);
 Result<Interface> parse_interface(Tokenizer &t);
 
 } // namespace Duck
