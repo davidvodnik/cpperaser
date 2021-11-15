@@ -24,6 +24,17 @@ Result<std::string_view> parse_name(Tokenizer &t) {
     return name;
 }
 
+Result<int> parse_expected(Tokenizer &t, const std::string &e) {
+    if (!t.valid()) {
+        return Error{EndOfStream{t.token(), t.line()}};
+    }
+    if (t.token() != e) {
+        return Error{UnexpectedToken{e, t.token(), t.line()}};
+    }
+    t.next();
+    return 0;
+}
+
 Result<Method> parse_method(Tokenizer &t) {
     Type type;
     if (auto n = parse_type(t); !n.valid()) {
@@ -37,25 +48,15 @@ Result<Method> parse_method(Tokenizer &t) {
     } else {
         name = n.value();
     }
-    if (!t.valid()) {
-        return Error{EndOfStream{t.token(), t.line()}};
+    if (auto e = parse_expected(t, "("); !e.valid()) {
+        return e.error();
     }
-    if (t.token() != "(") {
-        return Error{UnexpectedToken{"(", t.token(), t.line()}};
+    if (auto e = parse_expected(t, ")"); !e.valid()) {
+        return e.error();
     }
-    if (!t.next()) {
-        return Error{EndOfStream{t.token(), t.line()}};
+    if (auto e = parse_expected(t, ";"); !e.valid()) {
+        return e.error();
     }
-    if (t.token() != ")") {
-        return Error{UnexpectedToken{")", t.token(), t.line()}};
-    }
-    if (!t.next()) {
-        return Error{EndOfStream{t.token(), t.line()}};
-    }
-    if (t.token() != ";") {
-        return Error{UnexpectedToken{";", t.token(), t.line()}};
-    }
-    t.next();
     return Method{type, name};
 }
 
@@ -73,13 +74,9 @@ Result<Interface> parse_interface(Tokenizer &t) {
     } else {
         name = n.value();
     }
-    if (!t.valid()) {
-        return Error{EndOfStream{t.token(), t.line()}};
+    if (auto e = parse_expected(t, "{"); !e.valid()) {
+        return e.error();
     }
-    if (t.token() != "{") {
-        return Error{UnexpectedToken{"{", t.token(), t.line()}};
-    }
-    t.next();
     std ::vector<Method> methods;
     while (t.token() != "}" && t.valid()) {
         auto m = parse_method(t);
@@ -88,19 +85,12 @@ Result<Interface> parse_interface(Tokenizer &t) {
         }
         methods.push_back(m.value());
     }
-    if (!t.valid()) {
-        return Error{EndOfStream{t.token(), t.line()}};
+    if (auto e = parse_expected(t, "}"); !e.valid()) {
+        return e.error();
     }
-    if (t.token() != "}") {
-        return Error{UnexpectedToken{"}", t.token(), t.line()}};
+    if (auto e = parse_expected(t, ";"); !e.valid()) {
+        return e.error();
     }
-    if (!t.next()) {
-        return Error{EndOfStream{t.token(), t.line()}};
-    }
-    if (t.token() != ";") {
-        return Error{UnexpectedToken{";", t.token(), t.line()}};
-    }
-    t.next();
     return Interface{name, methods};
 }
 
