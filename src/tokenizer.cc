@@ -23,7 +23,7 @@ void Tokenizer::advance() {
     first_ = pos_;
 
     if (pos_ == s_.size()) {
-        token_ = Token{""};
+        token_ = {};
         pos_++;
         return;
     }

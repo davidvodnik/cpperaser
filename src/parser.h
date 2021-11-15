@@ -6,30 +6,20 @@
 
 namespace Duck {
 
-class UnexpectedToken {
-public:
-    UnexpectedToken(std::string expected, Token token, Line line)
-        : expected_(std::move(expected)), token_(token), line_(line) {}
-
+struct UnexpectedToken {
     std::string expected_;
-    Token token_;
-    Line line_;
+    std::string_view token;
+    Line line;
 };
 
-class EndOfStream {
-public:
-    EndOfStream(Token token, Line line) : token_(token), line_(line) {}
-
-    Token token_;
-    Line line_;
+struct EndOfStream {
+    std::string_view token;
+    Line line;
 };
 
-class InvalidName {
-public:
-    InvalidName(Token token, Line line) : token_(token), line_(line) {}
-
-    Token token_;
-    Line line_;
+struct InvalidName {
+    std::string_view token;
+    Line line;
 };
 
 class Error {

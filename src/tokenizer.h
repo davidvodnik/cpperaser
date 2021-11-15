@@ -3,33 +3,15 @@
 
 namespace Duck {
 
-class Token {
-public:
-    Token() = default;
-    Token(std::string_view token) : token_(token) {}
-
-    bool operator==(const Token &token) const { return token_ == token.token_; }
-    bool operator==(const std::string_view &token) const {
-        return token_ == token;
-    }
-    bool operator!=(const std::string_view &token) const {
-        return !(*this == token);
-    }
-
-    std::string_view token_;
-};
-
 struct Line {
-    std::string_view contents_;
+    std::string_view contents;
     size_t number;
     size_t position;
 };
 
 class Tokenizer {
 public:
-    Tokenizer(std::string s) : s_(std::move(s)), pos_(0), token_("") {
-        advance();
-    }
+    Tokenizer(std::string s) : s_(std::move(s)) { advance(); }
 
     bool valid() { return pos_ <= s_.size(); }
 
@@ -38,7 +20,7 @@ public:
         return valid();
     }
 
-    Token &token() { return token_; }
+    std::string_view &token() { return token_; }
 
     Line line() {
         size_t pos = pos_;
@@ -53,9 +35,9 @@ private:
 
     const std::string s_;
 
-    size_t pos_;
+    size_t pos_{};
 
-    Token token_;
+    std::string_view token_;
 
     size_t first_{};
     size_t line_{};
