@@ -3,36 +3,56 @@
 
 namespace Duck {
 
-Result<Type> parse_type(Tokenizer &t) {
+Result<int> parse_expected(Tokenizer &t, const std::string &e) {
     if (!t.valid()) {
         return Error{EndOfStream{t.token(), t.line()}};
     }
-    auto type = t.token();
+
+    if (t.token() != e) {
+        return Error{UnexpectedToken{e, t.token(), t.line()}};
+    }
+
     t.next();
-    return Type{std::string{type}};
+    return 0;
 }
 
 Result<std::string_view> parse_name(Tokenizer &t) {
     if (!t.valid()) {
         return Error{EndOfStream{t.token(), t.line()}};
     }
+
     auto name = t.token();
     if (!std::isalpha(name[0])) {
         return Error{InvalidName{t.token(), t.line()}};
     }
+
     t.next();
     return name;
 }
 
-Result<int> parse_expected(Tokenizer &t, const std::string &e) {
+Result<Type> parse_type(Tokenizer &t) {
     if (!t.valid()) {
         return Error{EndOfStream{t.token(), t.line()}};
     }
-    if (t.token() != e) {
-        return Error{UnexpectedToken{e, t.token(), t.line()}};
+
+    auto name = parse_name(t);
+    if (!name.valid()) {
+        return name.error();
     }
-    t.next();
-    return 0;
+
+    if (t.token() == "<") {
+        t.next();
+
+        auto nested_type = parse_type(t);
+        if (!nested_type.valid()) {
+            return nested_type.error();
+        }
+        if (auto e = parse_expected(t, ">"); !e.valid()) {
+            return e.error();
+        }
+    }
+
+    return Type{std::string{name.value()}};
 }
 
 Result<Method> parse_method(Tokenizer &t) {
