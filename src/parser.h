@@ -25,6 +25,15 @@ public:
     std::string_view line_;
 };
 
+class InvalidName {
+public:
+    InvalidName(Token token, std::string_view line)
+        : token_(token), line_(line) {}
+
+    Token token_;
+    std::string_view line_;
+};
+
 class Error {
 public:
     template <typename T> Error(T error) : error_(error) {}
@@ -35,7 +44,7 @@ public:
     template <typename T> T as() const { return std::get<T>(error_); }
 
 private:
-    std::variant<UnexpectedToken, EndOfStream> error_;
+    std::variant<UnexpectedToken, EndOfStream, InvalidName> error_;
 };
 
 template <typename T> class Result {

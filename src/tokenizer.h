@@ -5,6 +5,7 @@ namespace Duck {
 
 class Token {
 public:
+    Token() = default;
     Token(std::string_view token, size_t line, size_t position)
         : token_(token), line_(line), position_(position) {}
 
@@ -21,8 +22,8 @@ public:
     [[nodiscard]] size_t line() const { return line_; }
     [[nodiscard]] size_t position() const { return position_; }
 
-    size_t line_;
-    size_t position_;
+    size_t line_{};
+    size_t position_{};
     std::string_view token_;
 };
 

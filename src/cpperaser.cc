@@ -58,6 +58,12 @@ void print_error(const Duck::Error &error) {
                    e.token_.position() + 1);
         print_line(e.line_, e.token_.line() + 1, e.token_.position() + 1);
     }
+    if (error.is<Duck::InvalidName>()) {
+        auto e = error.as<Duck::InvalidName>();
+        fmt::print(":{}:{}: error: invalid name '{}'\n", e.token_.line() + 1,
+                   e.token_.position() + 1, e.token_.token_);
+        print_line(e.line_, e.token_.line() + 1, e.token_.position() + 1);
+    }
 }
 
 int main(int argc, char **argv) {

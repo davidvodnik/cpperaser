@@ -1,16 +1,30 @@
 #include "parser.h"
+#include <cctype>
 
 namespace Duck {
+
+Result<Token> parse_name(Tokenizer &t) {
+    if (!t.valid()) {
+        return Error{EndOfStream{t.token(), t.line()}};
+    }
+    if (!std::isalpha(t.token().token_[0])) {
+        return Error{InvalidName{t.token(), t.line()}};
+    }
+    return t.token();
+}
 
 Result<Method> parse_method(Tokenizer &t) {
     if (!t.valid()) {
         return Error{EndOfStream{t.token(), t.line()}};
     }
     auto type = t.token();
-    if (!t.next()) {
-        return Error{EndOfStream{t.token(), t.line()}};
+    t.next();
+    Token name;
+    if (auto n = parse_name(t); !n.valid()) {
+        return n.error();
+    } else {
+        name = n.value();
     }
-    auto name = t.token();
     if (!t.next()) {
         return Error{EndOfStream{t.token(), t.line()}};
     }
@@ -40,10 +54,13 @@ Result<Interface> parse_interface(Tokenizer &t) {
     if (t.token() != "struct") {
         return Error{UnexpectedToken{"struct", t.token(), t.line()}};
     }
-    if (!t.next()) {
-        return Error{EndOfStream{t.token(), t.line()}};
+    t.next();
+    Token name;
+    if (auto n = parse_name(t); !n.valid()) {
+        return n.error();
+    } else {
+        name = n.value();
     }
-    auto name = t.token();
     if (!t.next()) {
         return Error{EndOfStream{t.token(), t.line()}};
     }
