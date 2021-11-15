@@ -81,6 +81,18 @@ Result<Method> parse_method(Tokenizer &t) {
     return Method{type.value(), name.value()};
 }
 
+Result<std::vector<Method>> parse_methods(Tokenizer &t) {
+    std ::vector<Method> methods;
+    while (t.token() != "}" && t.valid()) {
+        auto method = parse_method(t);
+        if (!method.valid()) {
+            return method.error();
+        }
+        methods.push_back(method.value());
+    }
+    return methods;
+}
+
 Result<Interface> parse_interface(Tokenizer &t) {
     if (auto e = parse_expected(t, "struct"); !e.valid()) {
         return e.error();
@@ -95,13 +107,9 @@ Result<Interface> parse_interface(Tokenizer &t) {
         return e.error();
     }
 
-    std ::vector<Method> methods;
-    while (t.token() != "}" && t.valid()) {
-        auto m = parse_method(t);
-        if (!m.valid()) {
-            return m.error();
-        }
-        methods.push_back(m.value());
+    auto methods = parse_methods(t);
+    if (!methods.valid()) {
+        return methods.error();
     }
 
     if (auto e = parse_expected(t, "}"); !e.valid()) {
@@ -112,7 +120,7 @@ Result<Interface> parse_interface(Tokenizer &t) {
         return e.error();
     }
 
-    return Interface{name.value(), methods};
+    return Interface{name.value(), methods.value()};
 }
 
 } // namespace Duck
