@@ -65,6 +65,49 @@ Result<Type> parse_type(Tokenizer &t) {
     return Type{std::string{name.value()}};
 }
 
+Result<Parameter> parse_parameter(Tokenizer &t) {
+    auto type = parse_type(t);
+    if (!type.valid()) {
+        return type.error();
+    }
+
+    auto name = parse_name(t);
+    if (!name.valid()) {
+        return name.error();
+    }
+
+    return Parameter{type.value(), std::string(name.value())};
+}
+
+Result<std::vector<Parameter>> parse_parameter_list(Tokenizer &t) {
+    if (auto e = parse_expected(t, "("); !e.valid()) {
+        return e.error();
+    }
+
+    std::vector<Parameter> parameters;
+    if (t.token() != ")") {
+        while (true) {
+
+            auto parameter = parse_parameter(t);
+            if (!parameter.valid()) {
+                return parameter.error();
+            }
+            parameters.push_back(parameter.value());
+
+            if ((t.token() != ",")) {
+                break;
+            }
+            t.next();
+        }
+    }
+
+    if (auto e = parse_expected(t, ")"); !e.valid()) {
+        return e.error();
+    }
+
+    return std::vector<Parameter>();
+}
+
 Result<Method> parse_method(Tokenizer &t) {
     auto type = parse_type(t);
     if (!type.valid()) {
@@ -76,19 +119,16 @@ Result<Method> parse_method(Tokenizer &t) {
         return name.error();
     }
 
-    if (auto e = parse_expected(t, "("); !e.valid()) {
-        return e.error();
-    }
-
-    if (auto e = parse_expected(t, ")"); !e.valid()) {
-        return e.error();
+    auto parameters = parse_parameter_list(t);
+    if (!parameters.valid()) {
+        return parameters.error();
     }
 
     if (auto e = parse_expected(t, ";"); !e.valid()) {
         return e.error();
     }
 
-    return Method{type.value(), name.value()};
+    return Method{type.value(), name.value(), parameters.value()};
 }
 
 Result<std::vector<Method>> parse_methods(Tokenizer &t) {

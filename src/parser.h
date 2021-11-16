@@ -52,12 +52,19 @@ struct Type {
     std::string name;
 };
 
-class Method {
-public:
-    Method(Type type, std::string_view name)
-        : type(std::move(type)), name(name) {}
+struct Parameter {
     Type type;
     std::string name;
+};
+
+struct Method {
+public:
+    Method(Type type, std::string_view name, std::vector<Parameter> parameters)
+        : type(std::move(type)), name(name), parameters(std::move(parameters)) {
+    }
+    Type type;
+    std::string name;
+    std::vector<Parameter> parameters;
 };
 
 class Interface {
@@ -73,6 +80,8 @@ Result<int> parse_expected(Tokenizer &t, const std::string &e);
 Result<std::string_view> parse_name(Tokenizer &t);
 Result<int> parse_nested_types(Tokenizer &t);
 Result<Type> parse_type(Tokenizer &t);
+Result<Parameter> parse_parameter(Tokenizer &t);
+Result<std::vector<Parameter>> parse_parameter_list(Tokenizer &t);
 Result<Method> parse_method(Tokenizer &t);
 Result<std::vector<Method>> parse_methods(Tokenizer &t);
 Result<Interface> parse_interface(Tokenizer &t);
