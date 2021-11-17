@@ -1,26 +1,23 @@
-add_executable(test_tokenizer
-    tokenizer.h
-    tokenizer.cc
-    tokenizer.t.cc
-    )
-target_link_libraries(test_tokenizer PRIVATE catch)
-add_test(NAME test_tokenizer COMMAND test_tokenizer -o ${CMAKE_BINARY_DIR}/tokenizer.xml -r junit)
+function(add_component name)
+    message(STATUS "ARGN=${ARGN}")
+    add_library(${name} INTERFACE)
+    target_sources(${name} INTERFACE
+        ${name}.h
+        ${name}.cc
+        )
+    target_link_libraries(${name} INTERFACE ${ARGN})
 
-add_executable(test_parser
-    tokenizer.h
-    tokenizer.cc
-    parser.h
-    parser.cc
-    parser.t.cc
-    )
-target_link_libraries(test_parser PRIVATE catch)
-add_test(NAME test_parser COMMAND test_parser -o ${CMAKE_BINARY_DIR}/parser.xml -r junit)
+    add_executable(test_${name}
+        ${name}.t.cc
+        )
+    target_link_libraries(test_${name} PRIVATE ${ARGV0} catch)
+    add_test(NAME test_${name} COMMAND test_${name} -o ${CMAKE_BINARY_DIR}/tokenizer.xml -r junit)
+endfunction()
+
+add_component(tokenizer)
+add_component(parser tokenizer)
 
 add_executable(cpperaser
-    tokenizer.h
-    tokenizer.cc
-    parser.h
-    parser.cc
     cpperaser.cc
     )
-target_link_libraries(cpperaser PRIVATE fmt::fmt)
+target_link_libraries(cpperaser PRIVATE parser fmt::fmt)
