@@ -5,6 +5,7 @@ function(add_component name)
         ${name}.h
         ${name}.cc
         )
+    target_include_directories(${name} INTERFACE .)
     target_link_libraries(${name} INTERFACE ${ARGN})
 
     add_executable(test_${name}

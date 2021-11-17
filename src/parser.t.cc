@@ -1,5 +1,5 @@
-#include "parser.h"
 #include <catch.hpp>
+#include <parser.h>
 
 using namespace Duck;
 

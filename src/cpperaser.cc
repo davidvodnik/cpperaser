@@ -1,5 +1,5 @@
-#include "parser.h"
 #include <fmt/core.h>
+#include <parser.h>
 
 void print_interface(const Duck::Interface &interface) {
     fmt::print("#include <memory>\n\n"

@@ -1,13 +1,8 @@
 #pragma once
+#include <line.h>
 #include <string>
 
 namespace Duck {
-
-struct Line {
-    std::string_view contents;
-    size_t number;
-    size_t position;
-};
 
 class Tokenizer {
 public:

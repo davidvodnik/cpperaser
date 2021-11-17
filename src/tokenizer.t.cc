@@ -1,5 +1,5 @@
-#include "tokenizer.h"
 #include <catch.hpp>
+#include <tokenizer.h>
 
 using namespace Duck;
 
