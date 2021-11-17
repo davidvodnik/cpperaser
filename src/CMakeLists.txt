@@ -17,8 +17,10 @@ endfunction()
 
 add_component(tokenizer)
 add_component(parser tokenizer)
+add_component(generate_interface fmt::fmt)
+add_component(print_error fmt::fmt)
 
 add_executable(cpperaser
     cpperaser.cc
     )
-target_link_libraries(cpperaser PRIVATE parser fmt::fmt)
+target_link_libraries(cpperaser PRIVATE parser generate_interface print_error)
