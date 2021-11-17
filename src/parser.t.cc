@@ -3,12 +3,20 @@
 
 using namespace Duck;
 
+TEST_CASE("Parse parameter list") {
+    Tokenizer t("(int x)");
+    auto m = parse_parameter_list(t);
+    REQUIRE(m.valid());
+    REQUIRE(m.value().size() == 1);
+}
+
 TEST_CASE("Parse method") {
-    Tokenizer t("void fun();");
+    Tokenizer t("void fun(int x);");
     auto m = parse_method(t);
     REQUIRE(m.valid());
     REQUIRE(m.value().type.name == "void");
     REQUIRE(m.value().name == "fun");
+    REQUIRE(m.value().parameters.size() == 1);
 }
 
 TEST_CASE("Parse interface") {

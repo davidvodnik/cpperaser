@@ -104,7 +104,7 @@ Result<std::vector<Parameter>> parse_parameter_list(Tokenizer &t) {
         return e.error();
     }
 
-    return std::vector<Parameter>();
+    return parameters;
 }
 
 Result<Method> parse_method(Tokenizer &t) {
