@@ -17,8 +17,9 @@ void generate_interface(const Duck::Interface &interface) {
                "        model_(T t) : value_(t) {{}}\n");
 
     for (const auto &m : interface.methods) {
-        fmt::print("        {} {}_() override {{ value_.draw(); }}\n",
-                   m.type.name, m.name);
+        auto ret = m.type.name == "void" ? "" : "return ";
+        fmt::print("        {} {}_() override {{ {}value_.draw(); }}\n",
+                   m.type.name, m.name, ret);
     }
 
     fmt::print("        T value_;\n"
@@ -27,7 +28,9 @@ void generate_interface(const Duck::Interface &interface) {
                "public:\n");
 
     for (const auto &m : interface.methods) {
-        fmt::print("    {} {}() {{ value_->draw_(); }}\n", m.type.name, m.name);
+        auto ret = m.type.name == "void" ? "" : "return ";
+        fmt::print("    {} {}() {{ {}value_->draw_(); }}\n", m.type.name,
+                   m.name, ret);
     }
 
     fmt::print("\n"

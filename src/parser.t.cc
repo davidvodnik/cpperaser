@@ -3,6 +3,15 @@
 
 using namespace Duck;
 
+TEST_CASE("Parse type") {
+    Tokenizer t("const int & x");
+    auto type = parse_type(t);
+    auto name = parse_name(t);
+    REQUIRE(type.valid());
+    REQUIRE(name.valid());
+    REQUIRE(!t.valid());
+}
+
 TEST_CASE("Parse parameter list") {
     Tokenizer t("(int x)");
     auto m = parse_parameter_list(t);
@@ -32,6 +41,5 @@ TEST_CASE("Parse unexpected token") {
     auto i = parse_interface(t);
     REQUIRE(!i.valid());
     REQUIRE(i.error().is<UnexpectedToken>());
-    // REQUIRE(i.error().as<UnexpectedToken>().token_ == Token("xstruct", 0,
-    // 0));
+    REQUIRE(i.error().as<UnexpectedToken>().token == "xstruct");
 }

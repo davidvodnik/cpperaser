@@ -52,6 +52,12 @@ Result<Type> parse_type(Tokenizer &t) {
         return Error{EndOfStream{t.token(), t.line()}};
     }
 
+    bool east_const = false;
+    if (t.token() == "const") {
+        east_const = true;
+        t.next();
+    }
+
     auto name = parse_name(t);
     if (!name.valid()) {
         return name.error();
@@ -59,6 +65,19 @@ Result<Type> parse_type(Tokenizer &t) {
 
     if (auto e = parse_nested_types(t); !e.valid()) {
         return e.error();
+    }
+
+    bool west_const = false;
+    if (t.token() == "const") {
+        west_const = true;
+        t.next();
+    }
+    // TODO: duplicate const
+
+    bool reference = false;
+    if (t.token() == "&") {
+        reference = true;
+        t.next();
     }
 
     return Type{std::string{name.value()}};
