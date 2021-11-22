@@ -39,7 +39,7 @@ void generate_interface(const Duck::Interface &interface) {
     for (const auto &m : interface.methods) {
         auto ret = m.type.name == "void" ? "" : "return ";
         model_methods +=
-            fmt::format("        {} {}_() override {{ {}value_.draw(); }}\n",
+            fmt::format("        {0} {1}_() override {{ {2}value_.{1}(); }}\n",
                         m.type.name, m.name, ret);
     }
 
@@ -47,7 +47,7 @@ void generate_interface(const Duck::Interface &interface) {
     for (const auto &m : interface.methods) {
         auto ret = m.type.name == "void" ? "" : "return ";
         interface_methods += fmt::format(
-            "    {} {}() {{ {}value_->draw_(); }}\n", m.type.name, m.name, ret);
+            "    {0} {1}() {{ {2}value_->{1}_(); }}\n", m.type.name, m.name, ret);
     }
 
     fmt::print(interface_template, interface.name, concept_methods,
