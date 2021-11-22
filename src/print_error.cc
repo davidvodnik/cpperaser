@@ -2,7 +2,7 @@
 #include <print_error.h>
 
 void print_line(Duck::Line line) {
-    fmt::print("{: >{}} | {}\n", line.number, 5, line.contents);
+    fmt::print("{: >{}} | {}\n", line.number + 1, 5, line.contents);
     fmt::print("      | {: >{}}\n", "^", line.position + 1);
 }
 
