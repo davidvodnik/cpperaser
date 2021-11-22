@@ -1,44 +1,55 @@
 #include <fmt/core.h>
 #include <generate_interface.h>
 
+constexpr auto interface_template =
+R"(#include <memory>
+
+class {0} {{
+
+    struct concept_ {{
+{1}
+    }}
+
+    template<typename T> struct model_ : concept_ {{
+        model_(T t) : value_(t) {{}}
+{2}
+        T value_;
+    }};
+
+public:
+{3}
+
+    template <typename T> Drawable(const T &t) {{
+        value_ = std::make_unique<model_<T>>(t);
+    }}
+
+private:
+    std::unique_ptr<concept_> value_;
+}};)";
+
 void generate_interface(const Duck::Interface &interface) {
-    fmt::print("#include <memory>\n\n"
-               "class {} {{\n"
-               "    struct concept_ {{\n",
-               interface.name);
 
+    std::string concept_methods;
     for (const auto &m : interface.methods) {
-        fmt::print("        virtual {} {}_();\n", m.type.name, m.name);
+        concept_methods +=
+            fmt::format("        virtual {} {}_();\n", m.type.name, m.name);
     }
 
-    fmt::print("    }};\n"
-               "\n"
-               "    template<typename T> struct model_ : concept_ {{\n"
-               "        model_(T t) : value_(t) {{}}\n");
-
+    std::string model_methods;
     for (const auto &m : interface.methods) {
         auto ret = m.type.name == "void" ? "" : "return ";
-        fmt::print("        {} {}_() override {{ {}value_.draw(); }}\n",
-                   m.type.name, m.name, ret);
+        model_methods +=
+            fmt::format("        {} {}_() override {{ {}value_.draw(); }}\n",
+                        m.type.name, m.name, ret);
     }
 
-    fmt::print("        T value_;\n"
-               "    }};\n"
-               "\n"
-               "public:\n");
-
+    std::string interface_methods;
     for (const auto &m : interface.methods) {
         auto ret = m.type.name == "void" ? "" : "return ";
-        fmt::print("    {} {}() {{ {}value_->draw_(); }}\n", m.type.name,
-                   m.name, ret);
+        interface_methods += fmt::format(
+            "    {} {}() {{ {}value_->draw_(); }}\n", m.type.name, m.name, ret);
     }
 
-    fmt::print("\n"
-               "    template <typename T> Drawable(const T &t) {{\n"
-               "        value_ = std::make_unique<model_<T>>(t);\n"
-               "    }}\n"
-               "\n"
-               "private:\n"
-               "    std::unique_ptr<concept_> value_;\n"
-               "}};\n");
+    fmt::print(interface_template, interface.name, concept_methods,
+               model_methods, interface_methods);
 }
