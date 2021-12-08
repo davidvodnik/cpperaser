@@ -33,13 +33,41 @@ private:
 }};
 )";
 
+std::string generate_arguments(const std::vector<Duck::Parameter> &parameters) {
+    std::string argument_list;
+    for (auto parameter = begin(parameters); parameter != end(parameters);) {
+        argument_list +=
+            fmt::format("{} {}", parameter->type.name, parameter->name);
+        if (++parameter == end(parameters))
+            break;
+
+        argument_list += ", ";
+    }
+    return argument_list;
+}
+
+std::string
+generate_parameters(const std::vector<Duck::Parameter> &parameters) {
+    std::string parameter_list;
+    for (auto parameter = begin(parameters); parameter != end(parameters);) {
+        parameter_list += fmt::format("{}", parameter->name);
+        if (++parameter == end(parameters))
+            break;
+
+        parameter_list += ", ";
+    }
+    return parameter_list;
+}
+
 void generate_interface(const Duck::Interface &interface) {
 
     std::string concept_methods;
     for (auto method = begin(interface.methods);
          method != end(interface.methods);) {
-        concept_methods += fmt::format("        virtual {} {}_() = 0;",
-                                       method->type.name, method->name);
+        auto arguments = generate_arguments(method->parameters);
+        concept_methods +=
+            fmt::format("        virtual {} {}_({}) = 0;", method->type.name,
+                        method->name, arguments);
         if (++method == end(interface.methods))
             break;
 
@@ -49,10 +77,12 @@ void generate_interface(const Duck::Interface &interface) {
     std::string model_methods;
     for (auto method = begin(interface.methods);
          method != end(interface.methods);) {
+        auto arguments = generate_arguments(method->parameters);
+        auto parameters = generate_parameters(method->parameters);
         auto ret = method->type.name == "void" ? "" : "return ";
-        model_methods +=
-            fmt::format("        {0} {1}_() override {{ {2}value_.{1}(); }}",
-                        method->type.name, method->name, ret);
+        model_methods += fmt::format(
+            "        {0} {1}_({2}) override {{ {4}value_.{1}({3}); }}",
+            method->type.name, method->name, arguments, parameters, ret);
         if (++method == end(interface.methods))
             break;
 
@@ -62,10 +92,12 @@ void generate_interface(const Duck::Interface &interface) {
     std::string interface_methods;
     for (auto method = begin(interface.methods);
          method != end(interface.methods);) {
+        auto arguments = generate_arguments(method->parameters);
+        auto parameters = generate_parameters(method->parameters);
         auto ret = method->type.name == "void" ? "" : "return ";
-        interface_methods +=
-            fmt::format("    {0} {1}() {{ {2}value_->{1}_(); }}",
-                        method->type.name, method->name, ret);
+        interface_methods += fmt::format(
+            "    {0} {1}({2}) {{ {4}value_->{1}_({3}); }}", method->type.name,
+            method->name, arguments, parameters, ret);
         if (++method == end(interface.methods))
             break;
 
