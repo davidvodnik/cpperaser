@@ -16,6 +16,11 @@ public:
     }
 
     std::string_view &token() { return token_; }
+    [[nodiscard]] size_t cursor_first() const { return first_; }
+    [[nodiscard]] size_t cursor_last() const { return last_; }
+    std::string_view from_cursor(size_t start, size_t end) {
+        return std::string_view{s_.c_str() + start, end - start};
+    }
 
     Line line() {
         size_t pos = pos_;
@@ -35,6 +40,8 @@ private:
     std::string_view token_;
 
     size_t first_{};
+    size_t last_{};
+
     size_t line_{};
     size_t line_pos_{};
 };

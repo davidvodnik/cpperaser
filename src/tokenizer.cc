@@ -12,6 +12,8 @@ bool isspecial(char c) {
 namespace Duck {
 
 void Tokenizer::advance() {
+    last_ = pos_;
+
     while (pos_ < s_.size() && std::isspace(s_[pos_])) {
         if (s_[pos_] == '\n') {
             line_++;

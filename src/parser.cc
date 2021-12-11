@@ -52,9 +52,9 @@ Result<Type> parse_type(Tokenizer &t) {
         return Error{EndOfStream{t.token(), t.line()}};
     }
 
-    bool east_const = false;
+    auto start_cursor = t.cursor_first();
+
     if (t.token() == "const") {
-        east_const = true;
         t.next();
     }
 
@@ -67,20 +67,18 @@ Result<Type> parse_type(Tokenizer &t) {
         return e.error();
     }
 
-    bool west_const = false;
     if (t.token() == "const") {
-        west_const = true;
         t.next();
     }
     // TODO: duplicate const
 
-    bool reference = false;
     if (t.token() == "&") {
-        reference = true;
         t.next();
     }
 
-    return Type{std::string{name.value()}};
+    auto end_cursor = t.cursor_last();
+
+    return Type{std::string{t.from_cursor(start_cursor, end_cursor)}};
 }
 
 Result<Parameter> parse_parameter(Tokenizer &t) {
