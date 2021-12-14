@@ -6,6 +6,7 @@
 namespace Duck {
 
 struct Type {
+    bool free_function = false;
     std::string name;
 };
 
