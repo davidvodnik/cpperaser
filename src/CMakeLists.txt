@@ -24,3 +24,5 @@ add_executable(cpperaser
     cpperaser.cc
     )
 target_link_libraries(cpperaser PRIVATE parser generate_interface print_error)
+
+install(TARGETS cpperaser DESTINATION bin)
