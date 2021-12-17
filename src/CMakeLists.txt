@@ -12,7 +12,7 @@ function(add_component name)
         ${name}.t.cc
         )
     target_link_libraries(test_${name} PRIVATE ${ARGV0} catch)
-    add_test(NAME test_${name} COMMAND test_${name} -o ${CMAKE_BINARY_DIR}/tokenizer.xml -r junit)
+    add_test(NAME test_${name} COMMAND test_${name})
 endfunction()
 
 add_component(tokenizer)
