@@ -22,7 +22,7 @@ public:
 
 {3}
 
-    template <typename T> Drawable(const T &t) {{
+    template <typename T> {0}(const T &t) {{
         value_ = std::make_unique<model_<T>>(t);
     }}
 
