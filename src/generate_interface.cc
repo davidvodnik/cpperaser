@@ -8,12 +8,14 @@ class {0} {{
 
     struct concept_ {{
 {1}
+        virtual ~concept_() = default;
     }};
 
     template<typename T> struct model_ : concept_ {{
         model_(T t) : value_(t) {{}}
 
 {2}
+        virtual ~model_() = default;
 
         T value_;
     }};
