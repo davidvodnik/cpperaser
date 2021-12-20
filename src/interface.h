@@ -17,12 +17,14 @@ struct Parameter {
 
 struct Method {
 public:
-    Method(Type type, std::string_view name, std::vector<Parameter> parameters)
-        : type(std::move(type)), name(name), parameters(std::move(parameters)) {
-    }
+    Method(Type type, std::string_view name, std::vector<Parameter> parameters,
+           bool constant)
+        : type(std::move(type)), name(name), parameters(std::move(parameters)),
+          constant(constant) {}
     Type type;
     std::string name;
     std::vector<Parameter> parameters;
+    bool constant;
 };
 
 class Interface {

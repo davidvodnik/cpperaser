@@ -147,11 +147,17 @@ Result<Method> parse_method(Tokenizer &t) {
         return parameters.error();
     }
 
+    bool constant = false;
+    if (t.token() == "const") {
+        constant = true;
+        t.next();
+    }
+
     if (auto e = parse_expected(t, ";"); !e.valid()) {
         return e.error();
     }
 
-    return Method{type.value(), name.value(), parameters.value()};
+    return Method{type.value(), name.value(), parameters.value(), constant};
 }
 
 Result<std::vector<Method>> parse_methods(Tokenizer &t) {
