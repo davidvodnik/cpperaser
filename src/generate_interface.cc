@@ -11,27 +11,23 @@ class {0} {{
         virtual ~concept_() = default;
     }};
 
-    template<typename T> struct model_ : concept_ {{
-        model_(T t) : value_(t) {{}}
+    template <typename T> struct model_ : concept_ {{
+        model_(const T& t) : value_(t) {{}}
 
 {2}
-        virtual ~model_() = default;
 
         T value_;
     }};
 
 public:
-
-{3}
-
     template <typename T> {0}(const T &t) {{
         value_ = std::make_unique<model_<T>>(t);
     }}
 
+{3}
+
 private:
-
     std::unique_ptr<concept_> value_;
-
 }};
 )";
 
