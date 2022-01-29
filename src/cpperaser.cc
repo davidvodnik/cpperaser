@@ -1,6 +1,7 @@
-#include <generate_interface.h>
 #include <parser.h>
+#include <generate_interface.h>
 #include <print_error.h>
+#include "fmt/format.h"
 
 int main(int argc, char **argv) {
     if (argc != 2)
@@ -14,5 +15,5 @@ int main(int argc, char **argv) {
         return -1;
     }
 
-    generate_interface(interface.value());
+    fmt::print("{}", generate_interface(interface.value()));
 }

@@ -114,7 +114,7 @@ generate_interface_methods(const std::vector<Duck::Method> &methods) {
     return interface_methods;
 }
 
-void generate_interface(const Duck::Interface &interface) {
+std::string generate_interface(const Duck::Interface &interface) {
 
     std::string concept_methods = generate_concept_methods(interface.methods);
 
@@ -123,6 +123,6 @@ void generate_interface(const Duck::Interface &interface) {
     std::string interface_methods =
         generate_interface_methods(interface.methods);
 
-    fmt::print(interface_template, interface.name, concept_methods,
+    return fmt::format(interface_template, interface.name, concept_methods,
                model_methods, interface_methods);
 }
