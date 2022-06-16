@@ -24,5 +24,8 @@ add_executable(cpperaser
     cpperaser.cc
     )
 target_link_libraries(cpperaser PRIVATE parser generate_interface print_error)
+if(EMSCRIPTEN)
+target_link_options(cpperaser PRIVATE "SHELL: -s EXPORTED_FUNCTIONS=['_malloc','_free'] -s EXPORTED_RUNTIME_METHODS=['ccall','UTF8ToString'] -s EXPORT_ES6=1 -s MODULARIZE=1")
+endif()
 
 install(TARGETS cpperaser DESTINATION bin)
