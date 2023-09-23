@@ -14,19 +14,19 @@ std::string print_error(const Duck::Error &error) {
     if (error.is<Duck::UnexpectedToken>()) {
         auto e = error.as<Duck::UnexpectedToken>();
         r += fmt::format(":{}:{}: error: expected '{}'\n", e.line.number + 1,
-                   e.line.position + 1, e.expected_, e.token);
+                         e.line.position + 1, e.expected_, e.token);
         r += print_line(e.line);
     }
     if (error.is<Duck::EndOfStream>()) {
         auto e = error.as<Duck::EndOfStream>();
         r += fmt::format(":{}:{}: error: end of stream\n", e.line.number + 1,
-                   e.line.position + 1);
+                         e.line.position + 1);
         r += print_line(e.line);
     }
     if (error.is<Duck::InvalidName>()) {
         auto e = error.as<Duck::InvalidName>();
-        r += fmt::format(":{}:{}: error: invalid name '{}'\n", e.line.number + 1,
-                   e.line.position + 1, e.token);
+        r += fmt::format(":{}:{}: error: invalid name '{}'\n",
+                         e.line.number + 1, e.line.position + 1, e.token);
         r += print_line(e.line);
     }
 

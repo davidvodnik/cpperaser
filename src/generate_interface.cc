@@ -61,9 +61,9 @@ std::string generate_concept_methods(const std::vector<Duck::Method> &methods) {
     std::string concept_methods;
     for (auto method = begin(methods); method != end(methods);) {
         auto arguments = generate_arguments(method->parameters);
-        concept_methods +=
-            fmt::format("        virtual {} {}_({}){} = 0;", method->type.name,
-                        method->name, arguments, method->constant ? " const" : "");
+        concept_methods += fmt::format(
+            "        virtual {} {}_({}){} = 0;", method->type.name,
+            method->name, arguments, method->constant ? " const" : "");
         if (++method == end(methods))
             break;
 
@@ -82,11 +82,13 @@ std::string generate_model_methods(const std::vector<Duck::Method> &methods) {
             model_methods += fmt::format(
                 "        {0} {1}_({2}){6} override {{ {4}{1}(value_{5}{3}); }}",
                 method->type.name, method->name, arguments, parameters, ret,
-                !parameters.empty() ? ", " : "", method->constant ? " const" : "");
+                !parameters.empty() ? ", " : "",
+                method->constant ? " const" : "");
         } else {
             model_methods += fmt::format(
                 "        {0} {1}_({2}){5} override {{ {4}value_.{1}({3}); }}",
-                method->type.name, method->name, arguments, parameters, ret, method->constant ? " const" : "");
+                method->type.name, method->name, arguments, parameters, ret,
+                method->constant ? " const" : "");
         }
         if (++method == end(methods))
             break;
@@ -103,9 +105,10 @@ generate_interface_methods(const std::vector<Duck::Method> &methods) {
         auto arguments = generate_arguments(method->parameters);
         auto parameters = generate_parameters(method->parameters);
         auto ret = method->type.name == "void" ? "" : "return ";
-        interface_methods += fmt::format(
-            "    {0} {1}({2}){5} {{ {4}value_->{1}_({3}); }}", method->type.name,
-            method->name, arguments, parameters, ret, method->constant ? " const" : "");
+        interface_methods +=
+            fmt::format("    {0} {1}({2}){5} {{ {4}value_->{1}_({3}); }}",
+                        method->type.name, method->name, arguments, parameters,
+                        ret, method->constant ? " const" : "");
         if (++method == end(methods))
             break;
 
@@ -124,5 +127,5 @@ std::string generate_interface(const Duck::Interface &interface) {
         generate_interface_methods(interface.methods);
 
     return fmt::format(interface_template, interface.name, concept_methods,
-               model_methods, interface_methods);
+                       model_methods, interface_methods);
 }

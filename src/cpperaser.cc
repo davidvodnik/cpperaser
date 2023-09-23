@@ -1,7 +1,7 @@
-#include <parser.h>
-#include <generate_interface.h>
-#include <print_error.h>
 #include "fmt/format.h"
+#include <generate_interface.h>
+#include <parser.h>
+#include <print_error.h>
 
 #ifdef __EMSCRIPTEN__
 
@@ -10,7 +10,7 @@
 extern "C" {
 
 EMSCRIPTEN_KEEPALIVE
-int parse_interface(const char* input, char* output) {
+int parse_interface(const char *input, char *output) {
     Duck::Tokenizer t(input);
     auto interface = Duck::parse_interface(t);
 
@@ -25,7 +25,6 @@ int parse_interface(const char* input, char* output) {
 
     return 1;
 }
-
 }
 
 #else
