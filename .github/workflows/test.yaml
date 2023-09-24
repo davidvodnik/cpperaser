@@ -25,3 +25,10 @@ jobs:
       working-directory: ${{github.workspace}}/build
       run: ctest
       
+    - name: Generate test report
+      uses: mikepenz/action-junit-report@v3.8.0
+
+    - name: Display test report
+      uses: turing85/publish-report@v1.0.11
+      with:
+        comment-header: CTest Report
