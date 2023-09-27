@@ -5,26 +5,25 @@
 
 #ifdef __EMSCRIPTEN__
 
-#include <emscripten.h>
+#include <emscripten/bind.h>
 
-extern "C" {
+namespace Binding {
 
-EMSCRIPTEN_KEEPALIVE
-int parse_interface(const char *input, char *output) {
+std::string generate_interface(std::string input) {
     Duck::Tokenizer t(input);
     auto interface = Duck::parse_interface(t);
 
     if (!interface.valid()) {
-        auto s = print_error(interface.error());
-        strcpy(output, s.c_str());
-        return 0;
+        return print_error(interface.error());
     }
 
-    auto s = generate_interface(interface.value());
-    strcpy(output, s.c_str());
-
-    return 1;
+    return ::generate_interface(interface.value());
 }
+
+} // namespace Binding
+
+EMSCRIPTEN_BINDINGS(cpperaser) {
+    emscripten::function("generate_interface", &Binding::generate_interface);
 }
 
 #else
