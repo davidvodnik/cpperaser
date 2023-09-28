@@ -64,9 +64,21 @@ Result<Type> parse_type(Tokenizer &t) {
         t.next();
     }
 
-    auto name = parse_name(t);
-    if (!name.valid()) {
-        return name.error();
+    while (true) {
+        auto name = parse_name(t);
+        if (!name.valid()) {
+            return name.error();
+        }
+        if (t.token() == ":") {
+            t.next();
+        } else {
+            break;
+        }
+        if (t.token() == ":") {
+            t.next();
+        } else {
+            return Error{UnexpectedToken{":", t.token(), t.line()}};
+        }
     }
 
     if (auto e = parse_nested_types(t); !e.valid()) {

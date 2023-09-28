@@ -12,6 +12,24 @@ TEST_CASE("Parse type") {
     REQUIRE(!t.valid());
 }
 
+TEST_CASE("Parse generic type") {
+    Tokenizer t("optional<int> x");
+    auto type = parse_type(t);
+    auto name = parse_name(t);
+    REQUIRE(type.valid());
+    REQUIRE(name.valid());
+    REQUIRE(!t.valid());
+}
+
+TEST_CASE("Parse type with namespace") {
+    Tokenizer t("std::optional<int> x");
+    auto type = parse_type(t);
+    auto name = parse_name(t);
+    REQUIRE(type.valid());
+    REQUIRE(name.valid());
+    REQUIRE(!t.valid());
+}
+
 TEST_CASE("Parse parameter list") {
     Tokenizer t("(int x)");
     auto m = parse_parameter_list(t);
