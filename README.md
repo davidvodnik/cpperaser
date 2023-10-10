@@ -2,7 +2,7 @@
 
 `cpperaser` is a type erasure generator for C++.
 
-Try it online: [cpperaser.org](cpperaser.org)
+Try it online: [cpperaser.org](https://cpperaser.org)
 
 ## Building from source
 
