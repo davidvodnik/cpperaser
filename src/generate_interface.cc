@@ -7,13 +7,16 @@ constexpr auto interface_template =
 class {0} {{
 
     struct concept_ {{
-{1}
         virtual ~concept_() = default;
+        virtual std::unique_ptr<concept_> copy_() const = 0;
+{1}
     }};
 
     template <typename T> struct model_ : concept_ {{
         model_(const T& t) : value_(t) {{}}
-
+        std::unique_ptr<concept_> copy_() const override {{
+            return std::make_unique<model_>(value_);
+        }}
 {2}
 
         T value_;
@@ -23,6 +26,7 @@ public:
     template <typename T> {0}(const T &t) {{
         value_ = std::make_unique<model_<T>>(t);
     }}
+    {0}(const {0}& other) : value_(other.value_->copy_()) {{}}
 
 {3}
 
