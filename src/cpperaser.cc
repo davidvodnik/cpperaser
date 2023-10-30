@@ -42,7 +42,7 @@ int main(int argc, char **argv) {
         return -1;
     }
 
-    fmt::print("{}", generate_interface(interface.value()));
+    fmt::print("{}", generate_interface(interface.value(), true));
 }
 
 #endif
