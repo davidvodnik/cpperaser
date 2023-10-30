@@ -2,4 +2,5 @@
 #include <interface.h>
 #include <string>
 
-std::string generate_interface(const Duck::Interface &interface, bool copyable);
+std::string generate_interface(const CppEraser::Interface &interface,
+                               bool copyable);

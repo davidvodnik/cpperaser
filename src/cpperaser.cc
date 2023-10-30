@@ -10,8 +10,8 @@
 namespace Binding {
 
 std::string generate_interface(std::string input, bool copyable) {
-    Duck::Tokenizer t(input);
-    auto interface = Duck::parse_interface(t);
+    CppEraser::Tokenizer t(input);
+    auto interface = CppEraser::parse_interface(t);
 
     if (!interface.valid()) {
         return print_error(interface.error());
@@ -34,8 +34,8 @@ int main(int argc, char **argv) {
     if (argc != 2)
         return -1;
 
-    Duck::Tokenizer t(argv[1]);
-    auto interface = Duck::parse_interface(t);
+    CppEraser::Tokenizer t(argv[1]);
+    auto interface = CppEraser::parse_interface(t);
 
     if (!interface.valid()) {
         fmt::print("{}", print_error(interface.error()));

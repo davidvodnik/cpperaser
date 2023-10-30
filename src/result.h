@@ -2,7 +2,7 @@
 #include <line.h>
 #include <variant>
 
-namespace Duck {
+namespace CppEraser {
 
 struct UnexpectedToken {
     std::string expected_;
@@ -46,4 +46,4 @@ private:
     std::variant<T, Error> value_;
 };
 
-} // namespace Duck
+} // namespace CppEraser

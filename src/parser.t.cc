@@ -1,7 +1,7 @@
 #include <catch.hpp>
 #include <parser.h>
 
-using namespace Duck;
+using namespace CppEraser;
 
 TEST_CASE("Parse type") {
     Tokenizer t("const int & x");

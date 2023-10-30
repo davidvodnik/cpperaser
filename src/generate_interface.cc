@@ -64,7 +64,8 @@ private:
 }};
 )";
 
-std::string generate_arguments(const std::vector<Duck::Parameter> &parameters) {
+std::string
+generate_arguments(const std::vector<CppEraser::Parameter> &parameters) {
     std::string argument_list;
     for (auto parameter = begin(parameters); parameter != end(parameters);) {
         argument_list +=
@@ -78,7 +79,7 @@ std::string generate_arguments(const std::vector<Duck::Parameter> &parameters) {
 }
 
 std::string
-generate_parameters(const std::vector<Duck::Parameter> &parameters) {
+generate_parameters(const std::vector<CppEraser::Parameter> &parameters) {
     std::string parameter_list;
     for (auto parameter = begin(parameters); parameter != end(parameters);) {
         parameter_list += fmt::format("{}", parameter->name);
@@ -90,7 +91,8 @@ generate_parameters(const std::vector<Duck::Parameter> &parameters) {
     return parameter_list;
 }
 
-std::string generate_concept_methods(const std::vector<Duck::Method> &methods) {
+std::string
+generate_concept_methods(const std::vector<CppEraser::Method> &methods) {
     std::string concept_methods;
     for (auto method = begin(methods); method != end(methods);) {
         auto arguments = generate_arguments(method->parameters);
@@ -105,7 +107,8 @@ std::string generate_concept_methods(const std::vector<Duck::Method> &methods) {
     return concept_methods;
 }
 
-std::string generate_model_methods(const std::vector<Duck::Method> &methods) {
+std::string
+generate_model_methods(const std::vector<CppEraser::Method> &methods) {
     std::string model_methods;
     for (auto method = begin(methods); method != end(methods);) {
         auto arguments = generate_arguments(method->parameters);
@@ -132,7 +135,7 @@ std::string generate_model_methods(const std::vector<Duck::Method> &methods) {
 }
 
 std::string
-generate_interface_methods(const std::vector<Duck::Method> &methods) {
+generate_interface_methods(const std::vector<CppEraser::Method> &methods) {
     std::string interface_methods;
     for (auto method = begin(methods); method != end(methods);) {
         auto arguments = generate_arguments(method->parameters);
@@ -150,7 +153,7 @@ generate_interface_methods(const std::vector<Duck::Method> &methods) {
     return interface_methods;
 }
 
-std::string generate_interface(const Duck::Interface &interface,
+std::string generate_interface(const CppEraser::Interface &interface,
                                bool copyable) {
 
     std::string concept_methods = generate_concept_methods(interface.methods);

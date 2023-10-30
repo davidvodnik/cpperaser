@@ -1,7 +1,7 @@
 #include <catch.hpp>
 #include <tokenizer.h>
 
-using namespace Duck;
+using namespace CppEraser;
 
 TEST_CASE("Read whitespace") { REQUIRE(Tokenizer(" \n\t").valid() == false); }
 

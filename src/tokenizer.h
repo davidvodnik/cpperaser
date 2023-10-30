@@ -2,7 +2,7 @@
 #include <line.h>
 #include <string>
 
-namespace Duck {
+namespace CppEraser {
 
 class Tokenizer {
 public:
@@ -46,4 +46,4 @@ private:
     size_t line_pos_{};
 };
 
-} // namespace Duck
+} // namespace CppEraser

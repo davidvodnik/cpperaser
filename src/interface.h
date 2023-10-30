@@ -3,7 +3,7 @@
 #include <tokenizer.h>
 #include <vector>
 
-namespace Duck {
+namespace CppEraser {
 
 struct Type {
     bool free_function = false;
@@ -36,4 +36,4 @@ public:
     std::vector<Method> methods;
 };
 
-} // namespace Duck
+} // namespace CppEraser

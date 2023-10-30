@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
 
-namespace Duck {
+namespace CppEraser {
 
 struct Line {
     std::string_view contents;
@@ -9,4 +9,4 @@ struct Line {
     size_t position;
 };
 
-} // namespace Duck
+} // namespace CppEraser

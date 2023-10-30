@@ -10,7 +10,7 @@ bool isspecial(char c) {
 
 } // namespace
 
-namespace Duck {
+namespace CppEraser {
 
 void Tokenizer::advance() {
     last_ = pos_;
@@ -42,4 +42,4 @@ void Tokenizer::advance() {
     }
 }
 
-} // namespace Duck
+} // namespace CppEraser

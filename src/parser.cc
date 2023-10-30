@@ -1,6 +1,6 @@
 #include <parser.h>
 
-namespace Duck {
+namespace CppEraser {
 
 Result<int> parse_expected(Tokenizer &t, const std::string &e) {
     if (!t.valid()) {
@@ -214,4 +214,4 @@ Result<Interface> parse_interface(Tokenizer &t) {
     return Interface{name.value(), methods.value()};
 }
 
-} // namespace Duck
+} // namespace CppEraser
