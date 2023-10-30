@@ -8,6 +8,35 @@ class {0} {{
 
     struct concept_ {{
         virtual ~concept_() = default;
+{1}
+    }};
+
+    template <typename T> struct model_ : concept_ {{
+        model_(const T& t) : value_(t) {{}}
+{2}
+
+        T value_;
+    }};
+
+public:
+    template <typename T> {0}(const T &t) {{
+        value_ = std::make_unique<model_<T>>(t);
+    }}
+
+{3}
+
+private:
+    std::unique_ptr<concept_> value_;
+}};
+)";
+
+constexpr auto interface_template_copyable =
+    R"(#include <memory>
+
+class {0} {{
+
+    struct concept_ {{
+        virtual ~concept_() = default;
         virtual std::unique_ptr<concept_> copy_() const = 0;
 {1}
     }};
@@ -121,7 +150,8 @@ generate_interface_methods(const std::vector<Duck::Method> &methods) {
     return interface_methods;
 }
 
-std::string generate_interface(const Duck::Interface &interface) {
+std::string generate_interface(const Duck::Interface &interface,
+                               bool copyable) {
 
     std::string concept_methods = generate_concept_methods(interface.methods);
 
@@ -130,6 +160,11 @@ std::string generate_interface(const Duck::Interface &interface) {
     std::string interface_methods =
         generate_interface_methods(interface.methods);
 
-    return fmt::format(interface_template, interface.name, concept_methods,
-                       model_methods, interface_methods);
+    if (copyable) {
+        return fmt::format(interface_template_copyable, interface.name,
+                           concept_methods, model_methods, interface_methods);
+    } else {
+        return fmt::format(interface_template, interface.name, concept_methods,
+                           model_methods, interface_methods);
+    }
 }

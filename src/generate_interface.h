@@ -2,4 +2,4 @@
 #include <interface.h>
 #include <string>
 
-std::string generate_interface(const Duck::Interface &interface);
+std::string generate_interface(const Duck::Interface &interface, bool copyable);

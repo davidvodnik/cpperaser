@@ -9,7 +9,7 @@
 
 namespace Binding {
 
-std::string generate_interface(std::string input) {
+std::string generate_interface(std::string input, bool copyable) {
     Duck::Tokenizer t(input);
     auto interface = Duck::parse_interface(t);
 
@@ -17,7 +17,7 @@ std::string generate_interface(std::string input) {
         return print_error(interface.error());
     }
 
-    return ::generate_interface(interface.value());
+    return ::generate_interface(interface.value(), copyable);
 }
 
 } // namespace Binding
