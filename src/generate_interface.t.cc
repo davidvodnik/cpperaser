@@ -6,7 +6,9 @@ using namespace CppEraser;
 TEST_CASE("Parse interface") {
     Interface interface {
         "Drawable", {
-            { {false, "int"}, "draw", {}, false }
+            {
+                {"int"}, "draw", {}
+            }
         }
     };
     auto generated = generate_interface(interface, false);
@@ -42,7 +44,9 @@ private:
 TEST_CASE("Parse interface - copyable") {
     Interface interface {
         "Drawable", {
-            { {false, "int"}, "draw", {}, false }
+            {
+                {"int"}, "draw", {}
+            }
         }
     };
     auto generated = generate_interface(interface, true);

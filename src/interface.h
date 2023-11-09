@@ -6,7 +6,6 @@
 namespace CppEraser {
 
 struct Type {
-    bool free_function = false;
     std::string name;
 };
 
@@ -16,14 +15,14 @@ struct Parameter {
 };
 
 struct Method {
-public:
     Method(Type type, std::string_view name, std::vector<Parameter> parameters,
-           bool constant)
+           bool free_function = false, bool constant = false)
         : type(std::move(type)), name(name), parameters(std::move(parameters)),
-          constant(constant) {}
+          free_function(free_function), constant(constant) {}
     Type type;
     std::string name;
     std::vector<Parameter> parameters;
+    bool free_function;
     bool constant;
 };
 

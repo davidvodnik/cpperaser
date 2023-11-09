@@ -52,12 +52,6 @@ Result<Type> parse_type(Tokenizer &t) {
         return Error{EndOfStream{t.token(), t.line()}};
     }
 
-    bool free_function = false;
-    if (t.token() == "static") {
-        free_function = true;
-        t.next();
-    }
-
     auto start_cursor = t.cursor_first();
 
     if (t.token() == "const") {
@@ -96,8 +90,7 @@ Result<Type> parse_type(Tokenizer &t) {
 
     auto end_cursor = t.cursor_last();
 
-    return Type{free_function,
-                std::string{t.from_cursor(start_cursor, end_cursor)}};
+    return Type{std::string{t.from_cursor(start_cursor, end_cursor)}};
 }
 
 Result<Parameter> parse_parameter(Tokenizer &t) {
@@ -144,6 +137,12 @@ Result<std::vector<Parameter>> parse_parameter_list(Tokenizer &t) {
 }
 
 Result<Method> parse_method(Tokenizer &t) {
+    bool free_function = false;
+    if (t.token() == "static") {
+        free_function = true;
+        t.next();
+    }
+
     auto type = parse_type(t);
     if (!type.valid()) {
         return type.error();
@@ -169,7 +168,8 @@ Result<Method> parse_method(Tokenizer &t) {
         return e.error();
     }
 
-    return Method{type.value(), name.value(), parameters.value(), constant};
+    return Method{type.value(), name.value(), parameters.value(), free_function,
+                  constant};
 }
 
 Result<std::vector<Method>> parse_methods(Tokenizer &t) {

@@ -114,7 +114,7 @@ generate_model_methods(const std::vector<CppEraser::Method> &methods) {
         auto arguments = generate_arguments(method->parameters);
         auto parameters = generate_parameters(method->parameters);
         auto ret = method->type.name == "void" ? "" : "return ";
-        if (method->type.free_function) {
+        if (method->free_function) {
             model_methods += fmt::format(
                 "        {0} {1}_({2}){6} override {{ {4}{1}(value_{5}{3}); }}",
                 method->type.name, method->name, arguments, parameters, ret,
