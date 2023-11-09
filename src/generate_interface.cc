@@ -9,13 +9,11 @@ constexpr auto interface_template =
 class {0} {{
 
     struct concept_ {{
-        virtual ~concept_() = default;
-{1}
+        virtual ~concept_() = default;{1}
     }};
 
     template <typename T> struct model_ : concept_ {{
-        model_(const T& t) : value_(t) {{}}
-{2}
+        model_(const T& t) : value_(t) {{}}{2}
 
         T value_;
     }};
@@ -24,7 +22,6 @@ public:
     template <typename T> {0}(const T &t) {{
         value_ = std::make_unique<model_<T>>(t);
     }}
-
 {3}
 
 private:
@@ -39,16 +36,14 @@ class {0} {{
 
     struct concept_ {{
         virtual ~concept_() = default;
-        virtual std::unique_ptr<concept_> copy_() const = 0;
-{1}
+        virtual std::unique_ptr<concept_> copy_() const = 0;{1}
     }};
 
     template <typename T> struct model_ : concept_ {{
         model_(const T& t) : value_(t) {{}}
         std::unique_ptr<concept_> copy_() const override {{
             return std::make_unique<model_>(value_);
-        }}
-{2}
+        }}{2}
 
         T value_;
     }};
@@ -58,7 +53,6 @@ public:
         value_ = std::make_unique<model_<T>>(t);
     }}
     {0}(const {0}& other) : value_(other.value_->copy_()) {{}}
-
 {3}
 
 private:
@@ -96,15 +90,11 @@ generate_parameters(const std::vector<CppEraser::Parameter> &parameters) {
 std::string
 generate_concept_methods(const std::vector<CppEraser::Method> &methods) {
     std::string concept_methods;
-    for (auto method = begin(methods); method != end(methods);) {
+    for (auto method = begin(methods); method != end(methods); ++method) {
         auto arguments = generate_arguments(method->parameters);
         concept_methods += fmt::format(
-            "        virtual {} {}_({}){} = 0;", method->type.name,
+            "\n        virtual {} {}_({}){} = 0;", method->type.name,
             method->name, arguments, method->constant ? " const" : "");
-        if (++method == end(methods))
-            break;
-
-        concept_methods += "\n";
     }
     return concept_methods;
 }
@@ -112,26 +102,23 @@ generate_concept_methods(const std::vector<CppEraser::Method> &methods) {
 std::string
 generate_model_methods(const std::vector<CppEraser::Method> &methods) {
     std::string model_methods;
-    for (auto method = begin(methods); method != end(methods);) {
+    for (auto method = begin(methods); method != end(methods); ++method) {
         auto arguments = generate_arguments(method->parameters);
         auto parameters = generate_parameters(method->parameters);
         auto ret = method->type.name == "void" ? "" : "return ";
         if (method->free_function) {
-            model_methods += fmt::format(
-                "        {0} {1}_({2}){6} override {{ {4}{1}(value_{5}{3}); }}",
-                method->type.name, method->name, arguments, parameters, ret,
-                !parameters.empty() ? ", " : "",
-                method->constant ? " const" : "");
+            model_methods +=
+                fmt::format("\n        {0} {1}_({2}){6} override {{ "
+                            "{4}{1}(value_{5}{3}); }}",
+                            method->type.name, method->name, arguments,
+                            parameters, ret, !parameters.empty() ? ", " : "",
+                            method->constant ? " const" : "");
         } else {
             model_methods += fmt::format(
-                "        {0} {1}_({2}){5} override {{ {4}value_.{1}({3}); }}",
+                "\n        {0} {1}_({2}){5} override {{ {4}value_.{1}({3}); }}",
                 method->type.name, method->name, arguments, parameters, ret,
                 method->constant ? " const" : "");
         }
-        if (++method == end(methods))
-            break;
-
-        model_methods += "\n";
     }
     return model_methods;
 }
@@ -139,18 +126,14 @@ generate_model_methods(const std::vector<CppEraser::Method> &methods) {
 std::string
 generate_interface_methods(const std::vector<CppEraser::Method> &methods) {
     std::string interface_methods;
-    for (auto method = begin(methods); method != end(methods);) {
+    for (auto method = begin(methods); method != end(methods); ++method) {
         auto arguments = generate_arguments(method->parameters);
         auto parameters = generate_parameters(method->parameters);
         auto ret = method->type.name == "void" ? "" : "return ";
         interface_methods +=
-            fmt::format("    {0} {1}({2}){5} {{ {4}value_->{1}_({3}); }}",
+            fmt::format("\n    {0} {1}({2}){5} {{ {4}value_->{1}_({3}); }}",
                         method->type.name, method->name, arguments, parameters,
                         ret, method->constant ? " const" : "");
-        if (++method == end(methods))
-            break;
-
-        interface_methods += "\n";
     }
     return interface_methods;
 }
