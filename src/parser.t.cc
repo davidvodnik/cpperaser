@@ -41,6 +41,17 @@ TEST_CASE("Parse method") {
     Tokenizer t("void fun(int x);");
     auto m = parse_method(t);
     REQUIRE(m.valid());
+    REQUIRE(m.value().type.free_function == false);
+    REQUIRE(m.value().type.name == "void");
+    REQUIRE(m.value().name == "fun");
+    REQUIRE(m.value().parameters.size() == 1);
+}
+
+TEST_CASE("Parse static method") {
+    Tokenizer t("static void fun(int x);");
+    auto m = parse_method(t);
+    REQUIRE(m.valid());
+    REQUIRE(m.value().type.free_function == true);
     REQUIRE(m.value().type.name == "void");
     REQUIRE(m.value().name == "fun");
     REQUIRE(m.value().parameters.size() == 1);
