@@ -1,10 +1,8 @@
 #include <catch.hpp>
 #include <generate_interface.h>
 
-using namespace CppEraser;
-
 TEST_CASE("Parse interface") {
-    Interface interface {
+    CppEraser::Interface interface {
         "Drawable", {
             {
                 {"int"}, "draw", {}
@@ -42,14 +40,14 @@ private:
 }
 
 TEST_CASE("Parse interface - copyable") {
-    Interface interface {
+    CppEraser::Interface interface {
         "Drawable", {
             {
                 {"int"}, "draw", {}
             }
         }
     };
-    auto generated = generate_interface(interface, true);
+    auto generated = CppEraser::generate_interface(interface, true);
     REQUIRE(generated == R"(#include <memory>
 
 class Drawable {

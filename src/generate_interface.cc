@@ -1,6 +1,8 @@
 #include <fmt/core.h>
 #include <generate_interface.h>
 
+namespace CppEraser {
+
 constexpr auto interface_template =
     R"(#include <memory>
 
@@ -171,3 +173,5 @@ std::string generate_interface(const CppEraser::Interface &interface,
                            model_methods, interface_methods);
     }
 }
+
+} // namespace CppEraser

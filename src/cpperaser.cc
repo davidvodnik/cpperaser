@@ -17,7 +17,7 @@ std::string generate_interface(std::string input, bool copyable) {
         return print_error(interface.error());
     }
 
-    return ::generate_interface(interface.value(), copyable);
+    return CppEraser::generate_interface(interface.value(), copyable);
 }
 
 } // namespace Binding
