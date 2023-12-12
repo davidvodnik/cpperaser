@@ -1,11 +1,11 @@
 function(add_component name)
     message(STATUS "ARGN=${ARGN}")
     add_library(${name} INTERFACE)
-    target_sources(${name} INTERFACE
-        ${name}.h
-        ${name}.cc
+    target_sources(${name} INTERFACE ${name}.cc
+        INTERFACE FILE_SET HEADERS
+        BASE_DIRS .
+        FILES ${name}.h
         )
-    target_include_directories(${name} INTERFACE .)
     target_link_libraries(${name} INTERFACE ${ARGN})
 
     add_executable(test_${name}
