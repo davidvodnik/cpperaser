@@ -1,6 +1,6 @@
 # CppEraser
 
-`cpperaser` is a type erasure generator for C++.
+An experimental C++ type erasure generator. Define an interface and generate a wrapper that provides virtual dispatch without modifying the wrapped class.
 
 Try it online: [cpperaser.org](https://cpperaser.org)
 
