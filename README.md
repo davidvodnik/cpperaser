@@ -6,22 +6,10 @@ Try it online: [cpperaser.org](https://cpperaser.org)
 
 ## Building from source
 
-### Update submodules
+Requires CMake. Dependencies are included as Git submodules.
 
 ```console
 git submodule update --init --recursive
-```
-
-### Generate cmake build directory
-
-```console
-mkdir build
-cd build
-cmake ..
-```
-
-### Build with cmake
-
-```console
-cmake --build .
+cmake -S . -B build
+cmake --build build
 ```
