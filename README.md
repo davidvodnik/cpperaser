@@ -9,7 +9,7 @@ Try it online: [cpperaser.org](https://cpperaser.org)
 ### Update submodules
 
 ```console
-git update submodule --init --recursive
+git submodule update --init --recursive
 ```
 
 ### Generate cmake build directory
