@@ -8,7 +8,7 @@ Try it online: [cpperaser.org](https://cpperaser.org)
 
 Requires CMake. Dependencies are included as Git submodules.
 
-```console
+```sh
 git submodule update --init --recursive
 cmake -S . -B build
 cmake --build build
