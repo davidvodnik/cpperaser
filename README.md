@@ -4,6 +4,38 @@ An experimental C++ type erasure generator. Define an interface and generate a w
 
 Try it online: [cpperaser.org](https://cpperaser.org)
 
+## Example
+
+Provide a desired interface:
+
+```cpp
+struct Drawable {
+    void draw() const;
+};
+```
+
+The generated wrapper can hold any copy-constructible type with compatible methods, without requiring inheritance:
+
+```cpp
+struct Circle {
+    void draw() const { /* draw a circle */ }
+};
+
+struct Square {
+    void draw() const { /* draw a square */ }
+};
+
+// Use the generated Drawable wrapper, not the input declaration
+void render(const Drawable& object) {
+    object.draw();
+}
+
+void example() {
+    render(Drawable{Circle{}});
+    render(Drawable{Square{}});
+}
+```
+
 ## Building CLI from source
 
 Requires CMake. Dependencies are included as Git submodules.
